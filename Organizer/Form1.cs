@@ -13,67 +13,145 @@ namespace Organizer
 {
     public partial class Form1 : Form
     {
+        TestContext db;
+
         public Form1()
         {
             InitializeComponent();
-        }
+            db = new TestContext();
+            try
+            {
+            if (db.Database.Exists())
+                db.Database.Delete();
 
-        TestDB db = new TestDB();
+            //db.Database.Initialize(true);
+            bool b = db.Database.Exists();
+            db.Database.CreateIfNotExists();
+            }
+            catch (Exception err)
+            {
+
+                throw;
+            }
+            //db.SaveChanges();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*   // Create and save a new Blog 
-               Console.Write("Enter a name for a new Blog: ");
-               var name = Console.ReadLine();
+            PaintUsers();
 
-               var blog = new Blog { Name = name };
-               db.Blogs.Add(blog);
-               db.SaveChanges();
 
-               // Display all Blogs from the database 
-               var query = from b in db.Blogs
-                           orderby b.Name
-                           select b;
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "testDataSet.Users". При необходимости она может быть перемещена или удалена.
+            this.usersTableAdapter.Fill(this.testDataSet.Users);
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "testDataSet.Comments". При необходимости она может быть перемещена или удалена.
+            this.commentsTableAdapter.Fill(this.testDataSet.Comments);
+            //this.commentsTableAdapter.Fill(this.testDataSet.Comments);
+        }
 
-               Console.WriteLine("All blogs in the database:");
-               foreach (var item in query)
-               {
-                   Console.WriteLine(item.Name);
-               }
+        private void PaintUsers()
+        {
+            /* treeView1.Nodes.Clear();
+            List<User> list = db.Users.Where(x => x.ParentId == null).OrderBy(x => x.Name).ToList();
+            foreach (var item in list)
+            {
+                treeView1.Nodes.Add(new TreeNode() { Text = item.Name, Tag = item, Name="id"+item.UserId.ToString() });
+            }
 
-               Console.WriteLine("Press any key to exit...");
-               Console.ReadKey();*/
-              
-            
-            /* 
-                Customer customer = new Customer();
+            list = db.Users.Where(x => x.ParentId != null).OrderBy(x => x.Name).ToList();
 
-                // Получить данные из формы с помощью средств
-                // привязки моделей ASP.NET
-                IValueProvider provider =
-                    new FormValueProvider(ModelBindingExecutionContext);
-                if (TryUpdateModel<Customer>(customer, provider))
-                {
-                    // Загрузить фото профиля с помощью средств .NET
-                    HttpPostedFile photo = Request.Files["photo"];
-                    if (photo != null)
-                    {
-                        BinaryReader b = new BinaryReader(photo.InputStream);
-                        customer.Photo = b.ReadBytes((int)photo.InputStream.Length);
-                    }
+            foreach (var item in list)
+            {
+                treeView1.Nodes.Insert()
+                treeView1.Nodes.Add(new TreeNode() { ,Text = item.Name, Tag = item });
+            }*/
+        }
 
-                    // В этой точке непосредственно начинается работа с Entity Framework
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
 
-                    // Создать объект контекста
-                    SampleContext context = new SampleContext();
+        }
 
-                    // Вставить данные в таблицу Customers с помощью LINQ
-                    context.Customers.Add(customer);
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            db.Users.Add(new User() { Name = toolStripTextBox1.Text });
+            this.usersTableAdapter.Fill(this.testDataSet.Users);
 
-                    // Сохранить изменения в БД
-                    context.SaveChanges();*/
+            //dataGridView1.Update();
+        }
+
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            db.SaveChanges();
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            db.Comments.Add(new Comment() { Text = toolStripTextBox2.Text, User = db.Users.Where(x => x.UserId == (int)comboBox1.SelectedValue).FirstOrDefault() });
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+        }
+
+
+        private void tvClients_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                DoDragDrop(e.Item, DragDropEffects.Move);
             }
         }
+
+        private void tvClients_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        private void tvClients_DragOver(object sender, DragEventArgs e)
+        {
+            Point targetPoint = tvClients.PointToClient(new Point(e.X, e.Y));
+
+            tvClients.SelectedNode = tvClients.GetNodeAt(targetPoint);
+        }
+
+        private void tvClients_DragDrop(object sender, DragEventArgs e)
+        {
+            Point targetPoint = tvClients.PointToClient(new Point(e.X, e.Y));
+
+            TreeNode targetNode = tvClients.GetNodeAt(targetPoint);
+
+            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+
+            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode))
+            {
+                if (e.Effect == DragDropEffects.Move)
+                {
+                    draggedNode.Remove();
+                    targetNode.Nodes.Add(draggedNode);
+                }
+
+                targetNode.Expand();
+            }
+        }
+
+        private bool ContainsNode(TreeNode node1, TreeNode node2)
+        {
+            if (node2.Parent == null) return false;
+            if (node2.Parent.Equals(node1)) return true;
+
+            return ContainsNode(node1, node2.Parent);
+        }
+
+        private void tvClients_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            //panel1.Visible = e.Node != null;
+        }
     }
-    
 }
+
+

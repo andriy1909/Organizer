@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Organizer.Properties {
+namespace WindowsFormsApplication1.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,17 +20,6 @@ namespace Organizer.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Host=localhost;Database=TestDB;Username=postgres;Password=1;Persist Security Info" +
-            "=True")]
-        public string TestDBConnectionString {
-            get {
-                return ((string)(this["TestDBConnectionString"]));
             }
         }
         

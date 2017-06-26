@@ -6,27 +6,26 @@ using System.Threading.Tasks;
 
 namespace Organizer
 {
-    public class Customer
+    public class Category
     {
-        public int CustomerId { get; set; }
+        public int CategoryId { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public int Age { get; set; }
-        public byte[] Photo { get; set; }
-
-        // Ссылка на заказы
-        public virtual List<Order> Orders { get; set; }
+        public Category ParentCategory { get; set; }
+        public int Level { get; set; }
     }
 
-    public class Order
+    public class User
     {
-        public int OrderId { get; set; }
-        public string ProductName { get; set; }
-        public string Description { get; set; }
-        public int Quantity { get; set; }
-        public DateTime PurchaseDate { get; set; }
+        public int UserId { get; set; }
+        public string Name { get; set; }
+        public Category Category { get; set; }
+    }
 
-        // Ссылка на покупателя
-        public Customer Customer { get; set; }
+    public class Comment
+    {
+        public int CommentId { get; set; }
+        public string Text { get; set; }
+
+        public User User { get; set; }
     }
 }
